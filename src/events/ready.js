@@ -1,5 +1,5 @@
 const { setupPlayer } = require("../music/player");
-const autoJoin = require("../voice/autoJoin");
+
 
 module.exports = (client, registerCommands) => {
 
@@ -11,7 +11,7 @@ module.exports = (client, registerCommands) => {
 
             await registerCommands();
 
-            // await autoJoin(client);
+           
 
             console.log(`✅ ${client.user.tag} is online`);
 
