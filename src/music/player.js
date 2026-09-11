@@ -2,7 +2,13 @@ const { Player } = require("discord-player");
 const { DefaultExtractors } = require("@discord-player/extractor");
 
 async function setupPlayer(client) {
-    const player = new Player(client);
+    const player = new Player(client, {
+        skipFFmpeg: false,
+        ytdlOptions: {
+            quality: "highestaudio",
+            highWaterMark: 1 << 25
+        }
+    });
 
     await player.extractors.loadMulti(DefaultExtractors);
 
@@ -10,46 +16,53 @@ async function setupPlayer(client) {
 
     console.log("🎵 Discord Player Ready");
 
-    player.events.on("playerStart", (queue, track) => {
-        console.log("▶️ Playing:", track.title);
+    player.events.on("connection", () => {
+        console.log("🔊 Voice Connected");
+    });
 
-        if (queue.metadata) {
-            queue.metadata
-                .send(`🎵 **Now Playing:** **${track.title}**`)
-                .catch(() => {});
-        }
+    player.events.on("disconnect", () => {
+        console.log("🔌 Voice Disconnected");
     });
 
     player.events.on("audioTrackAdd", (queue, track) => {
-        console.log("➕ Added:", track.title);
+        console.log(`➕ Added: ${track.title}`);
+    });
+
+    player.events.on("playerStart", (queue, track) => {
+        console.log(`▶️ Playing: ${track.title}`);
+
+        queue.metadata
+            ?.send(`🎵 **Now Playing:** **${track.title}**`)
+            .catch(() => {});
     });
 
     player.events.on("playerSkip", (queue, track) => {
-        console.log("⏭️ Skipped:", track.title);
+        console.log(`⏭️ Skipped: ${track.title}`);
     });
 
     player.events.on("emptyQueue", () => {
         console.log("📭 Queue Empty");
     });
 
-    player.events.on("disconnect", () => {
-        console.log("🔌 Disconnected");
+    player.events.on("playerFinish", (queue, track) => {
+        console.log(`✅ Finished: ${track.title}`);
     });
 
-    player.events.on("connection", () => {
-        console.log("🔊 Voice Connected");
+    player.events.on("playerError", (queue, error) => {
+        console.error("❌ Player Error:", error.message || error);
+
+        // Skip broken songs automatically
+        try {
+            queue.node.skip();
+        } catch {}
     });
 
-    player.events.on("connectionError", (_, error) => {
-        console.error("❌ Connection Error:", error);
+    player.events.on("connectionError", (queue, error) => {
+        console.error("❌ Connection Error:", error.message || error);
     });
 
-    player.events.on("playerError", (_, error) => {
-        console.error("❌ Player Error:", error);
-    });
-
-    player.events.on("error", (_, error) => {
-        console.error("❌ General Error:", error);
+    player.events.on("error", (queue, error) => {
+        console.error("❌ General Error:", error.message || error);
     });
 }
 
