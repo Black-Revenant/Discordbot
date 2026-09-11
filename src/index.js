@@ -15,31 +15,77 @@ Collection
 
 const autoJoin = require("./voice/autoJoin");
 
-const client=new Client({
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildVoiceStates
+    ],
 
-intents:[
-GatewayIntentBits.Guilds,
-GatewayIntentBits.GuildMembers,
-GatewayIntentBits.GuildMessages,
-GatewayIntentBits.MessageContent
-],
-
-partials:[Partials.Channel]
-
+    partials: [
+        Partials.Channel,
+        Partials.GuildMember
+    ]
 });
 
-client.commands=new Collection();
-const commandFiles=fs.readdirSync("./src/commands")
-.filter(f=>f.endsWith(".js") && f!=="index.js");
+client.commands = new Collection();
 
-for(const file of commandFiles){
+function loadCommands(dir) {
+    const files = fs.readdirSync(dir, { withFileTypes: true });
 
-const command=require(`./commands/${file}`);
+    for (const file of files) {
+        const fullPath = path.join(dir, file.name);
 
-client.commands.set(command.name,command);
+        if (file.isDirectory()) {
+            loadCommands(fullPath);
+            continue;
+        }
 
+        if (!file.name.endsWith(".js") || file.name === "index.js") continue;
+
+        const command = require(fullPath);
+
+        if (!command.name) continue;
+
+        client.commands.set(command.name, command);
+
+        console.log(`✅ Loaded: ${command.name}`);
+    }
 }
-const commands=require("./commands");
+
+loadCommands(path.join(__dirname, "commands"));
+
+
+const slashCommands = [];
+
+function loadCommands(dir) {
+    const files = fs.readdirSync(dir, { withFileTypes: true });
+
+    for (const file of files) {
+        const fullPath = path.join(dir, file.name);
+
+        if (file.isDirectory()) {
+            loadCommands(fullPath);
+            continue;
+        }
+
+        if (!file.name.endsWith(".js") || file.name === "index.js") continue;
+
+        const command = require(fullPath);
+
+        if (!command.name || !command.data) continue;
+
+        client.commands.set(command.name, command);
+
+        slashCommands.push(command.data.toJSON());
+
+        console.log(`✅ Loaded ${command.name}`);
+    }
+}
+
+loadCommands(path.join(__dirname, "commands"));
 
 async function registerCommands(){
 
@@ -49,8 +95,7 @@ const rest=new REST({version:"10"})
 await rest.put(
 
 Routes.applicationCommands(client.user.id),
-
-{body:commands}
+{ body: slashCommands }
 
 );
 
@@ -62,3 +107,4 @@ require("./events/messageCreate")(client);
 require("./events/interactionCreate")(client);
 require("./dashboard/server")(client);
 client.login(process.env.DISCORD_TOKEN);
+

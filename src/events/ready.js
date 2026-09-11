@@ -1,15 +1,26 @@
-const autoJoin=require("../voice/autoJoin");
+const { setupPlayer } = require("../music/player");
+const autoJoin = require("../voice/autoJoin");
 
-module.exports=(client,registerCommands)=>{
+module.exports = (client, registerCommands) => {
 
-client.once("clientReady",async()=>{
+    client.once("clientReady", async () => {
 
-await registerCommands();
+        try {
 
-console.log(`✅ ${client.user.tag} is online`);
+            await setupPlayer(client);
 
-autoJoin(client);
+            await registerCommands();
 
-});
+            autoJoin(client);
+
+            console.log(`✅ ${client.user.tag} is online`);
+
+        } catch (err) {
+
+            console.error("Startup Error:", err);
+
+        }
+
+    });
 
 };

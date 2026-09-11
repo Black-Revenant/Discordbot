@@ -1,28 +1,32 @@
-const {
-    createAudioPlayer,
-    createAudioResource,
-    AudioPlayerStatus
-} = require("@discordjs/voice");
+const { Player } = require("discord-player");
+const { DefaultExtractors } = require("@discord-player/extractor");
 
-const play = require("play-dl");
+async function setupPlayer(client) {
+    const player = new Player(client);
 
-const player = createAudioPlayer();
+    await player.extractors.loadMulti(DefaultExtractors);
 
-async function playSong(connection, song) {
+    client.player = player;
 
-    const stream = await play.stream(song.url);
-
-    const resource = createAudioResource(stream.stream, {
-        inputType: stream.type
+    player.events.on("playerStart", (queue, track) => {
+    if (queue.metadata) {
+        queue.metadata.send(
+            `🎵 **Now Playing:** **${track.title}** by **${track.author}**`
+        ).catch(() => {});
+    }
+});
+    player.events.on("error", (queue, error) => {
+        console.error(error);
     });
+    player.events.on("connectionError", (queue, error) => {
+    console.error("Connection Error:", error);
+});
 
-    player.play(resource);
+player.events.on("playerError", (queue, error) => {
+    console.error("Player Error:", error);
+});
 
-    connection.subscribe(player);
+    console.log("🎵 Discord Player Ready");
 }
 
-module.exports = {
-    player,
-    playSong,
-    AudioPlayerStatus
-};
+module.exports = { setupPlayer };
