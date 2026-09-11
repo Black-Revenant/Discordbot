@@ -35,11 +35,11 @@ module.exports = {
         {
             nodeOptions: {
                 metadata: interaction.channel,
-                leaveOnEmpty: true,
+                leaveOnEmpty: false,
                 leaveOnEmptyCooldown: 30000,
-                leaveOnEnd: true,
+                leaveOnEnd: false,
                 leaveOnEndCooldown: 30000,
-                leaveOnStop: true
+                leaveOnStop: false
             },
             requestedBy: interaction.user
         }

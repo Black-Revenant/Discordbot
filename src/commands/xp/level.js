@@ -1,7 +1,12 @@
-const store = require("../store");
+const { SlashCommandBuilder } = require("discord.js");
+const store = require("../../store");
 
 module.exports = {
     name: "level",
+
+    data: new SlashCommandBuilder()
+        .setName("level")
+        .setDescription("View your current level and XP"),
 
     async execute(interaction) {
 

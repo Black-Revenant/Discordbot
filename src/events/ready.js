@@ -11,7 +11,7 @@ module.exports = (client, registerCommands) => {
 
             await registerCommands();
 
-            autoJoin(client);
+            // await autoJoin(client);
 
             console.log(`✅ ${client.user.tag} is online`);
 
