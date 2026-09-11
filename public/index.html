@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Target / Command center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand"><span class="brand-mark">✦</span><span>R4YHN.EXE</span></div>
+      <div class="rail-label">COMMAND CENTER</div>
+      <nav>
+        <a class="active" href="#overview"><span>◈</span> Overview</a>
+        <a href="#protection"><span>⌁</span> Protection</a>
+        <a href="#community"><span>◎</span> Community</a>
+        <a href="#settings"><span>⚙</span> Settings</a>
+      </nav>
+      <div class="rail-bottom"><span class="status-dot"></span><span>System operational</span></div>
+    </aside>
+    <main>
+      <header class="topbar"><div><p class="eyebrow">DISCORD / CONTROL LAYER</p><h1>Make your community<br><em>feel looked after.</em></h1></div><div class="top-actions"><span class="live-pill"><i></i> LIVE</span><button class="icon-button" title="Refresh data" onclick="loadDashboard()">↻</button><div class="avatar">MT</div></div></header>
+      <section id="overview" class="hero-grid">
+        <div class="hero-card"><div class="hero-orbit"></div><p class="eyebrow">THE INTELLIGENCE LAYER</p><h2>Your server,<br><strong>in good hands.</strong></h2><p class="muted">My Target quietly handles the busywork, so your community can stay focused on what matters.</p><div class="hero-foot"><span class="pulse"><i></i> All systems operational</span><span class="mono">v1.0.0</span></div></div>
+        <div class="metrics"><div class="metric"><span>MESSAGES PROCESSED</span><strong id="messages">—</strong><small>lifetime</small></div><div class="metric accent"><span>THREATS BLOCKED</span><strong id="threats">—</strong><small>spam + scam</small></div><div class="metric"><span>COMMUNITY LEVEL</span><strong id="commands">—</strong><small>commands handled</small></div><div class="metric"><span>CONNECTED SERVERS</span><strong id="guilds">—</strong><small>live now</small></div></div>
+      </section>
+      <section id="protection" class="section"><div class="section-heading"><div><p class="eyebrow">01 / PROTECTION</p><h3>Quietly vigilant.</h3></div><p class="section-note">Toggle the layers your community needs. Changes save instantly.</p></div><div class="module-grid"><label class="module"><span class="module-icon red">◈</span><span><b>Auto moderation</b><small>Filters harmful content</small></span><input type="checkbox" data-setting="moderation"><i class="toggle"></i></label><label class="module"><span class="module-icon yellow">≋</span><span><b>Anti-spam</b><small>Stops message floods</small></span><input type="checkbox" data-setting="antiSpam"><i class="toggle"></i></label><label class="module"><span class="module-icon teal">⌁</span><span><b>Anti-scam links</b><small>Blocks known bait links</small></span><input type="checkbox" data-setting="antiScam"><i class="toggle"></i></label></div></section>
+      <section id="community" class="section split"><div><div class="section-heading"><div><p class="eyebrow">02 / COMMUNITY</p><h3>Make it feel like home.</h3></div></div><div class="community-list"><label class="setting-row"><span><b>Welcome & goodbye</b><small>Greet arrivals and farewells</small></span><input type="checkbox" data-setting="welcome"><i class="toggle"></i></label><label class="setting-row"><span><b>Leveling system</b><small>Reward conversations with XP</small></span><input type="checkbox" data-setting="leveling"><i class="toggle"></i></label></div></div><div class="memory-card"><div class="memory-icon">🧠</div><p class="eyebrow">CONVERSATION MEMORY</p><h3>AI that knows the <em>thread.</em></h3><p class="muted">Each member gets a private rolling context, so `/ask` feels less like a search box and more like a familiar voice.</p></div></section>
+      <section id="settings" class="section settings-section"><div class="section-heading"><div><p class="eyebrow">03 / SETTINGS</p><h3>Admin panel</h3></div><span id="save-state" class="save-state">Ready</span></div><div class="form-grid"><label>WELCOME CHANNEL ID<input id="welcomeChannelId" placeholder="Optional channel ID"></label><label>WELCOME MESSAGE<input id="welcomeMessage" placeholder="Welcome to {server}, {user}! 👋"></label><label>DASHBOARD SECRET<input id="dashboardSecret" type="password" placeholder="Only needed when configured"></label></div><button class="save-button" onclick="saveSettings()">Save changes <span>↗</span></button></section>
+      <footer><span> © 2026</span><span>R4YHN.EXE <b>✦</b></span></footer>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
